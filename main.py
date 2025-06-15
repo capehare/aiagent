@@ -2,6 +2,7 @@ import os
 import sys
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 
 load_dotenv()
 api_key = os.environ.get("GEMINI_API_KEY")
@@ -16,9 +17,13 @@ except (IndexError, AssertionError):
 
 client = genai.Client(api_key=api_key)
 
+messages = [
+    types.Content(role="user", parts=[types.Part(text=joined_query)])
+    ]
+
 response = client.models.generate_content(
     model="gemini-2.0-flash-001", 
-    contents=joined_query
+    contents=messages
     )
 prompt_tokens = response.usage_metadata.prompt_token_count
 response_tokens = response.usage_metadata.candidates_token_count
