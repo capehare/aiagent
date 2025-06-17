@@ -8,8 +8,8 @@ load_dotenv()
 api_key = os.environ.get("GEMINI_API_KEY")
 
 try:
-    query = sys.argv[1:]
-    joined_query = " ".join(query)
+    query = sys.argv[1]
+    joined_query = "".join(query)
     assert joined_query != ""
 except (IndexError, AssertionError):
     sys.stderr.write("Please enter a prompt.\n")
@@ -28,5 +28,8 @@ response = client.models.generate_content(
 prompt_tokens = response.usage_metadata.prompt_token_count
 response_tokens = response.usage_metadata.candidates_token_count
 print(response.text)
-print(f"Prompt tokens: {prompt_tokens}")
-print(f"Response tokens: {response_tokens}")
+
+if "--verbose" in sys.argv:
+    print(f"User prompt: {joined_query}")
+    print(f"Prompt tokens: {prompt_tokens}")
+    print(f"Response tokens: {response_tokens}")
